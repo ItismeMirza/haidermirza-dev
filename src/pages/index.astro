@@ -1,0 +1,169 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const caseStudies = await getCollection('case-studies');
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="max-w-5xl mx-auto px-6 pt-40 pb-28">
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs text-blue-400/60 tracking-widest uppercase mb-8">
+        Cloud Native Security Engineer · London
+      </p>
+      <h1 class="text-5xl font-light text-white/90 leading-[1.15] tracking-tight mb-8">
+        Haider<br />Mirza
+      </h1>
+      <p class="text-xl text-white/40 font-light leading-relaxed max-w-xl">
+        I work at the intersection of cloud infrastructure, systems, and source
+        code — keeping them
+        <span class="text-white/60">confidential</span>,
+        <span class="text-white/60">integral</span>, and
+        <span class="text-white/60">available</span>.
+      </p>
+      <div class="flex items-center gap-6 mt-12">
+        <a href="/#work" class="text-sm text-white/50 hover:text-white/80 transition-colors border-b border-white/20 pb-0.5">
+          View work
+        </a>
+        <a href="/#contact" class="text-sm text-white/50 hover:text-white/80 transition-colors">
+          Get in touch →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logo Banner -->
+  <section class="border-y border-white/5 py-8 logo-banner overflow-hidden">
+    <div class="logo-track flex items-center gap-20 w-max px-10">
+      <img src="/logos/f5.png" alt="F5" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" />
+      <img src="/logos/doctornow.png" alt="Doctor Now" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" />
+      <img src="/logos/ima-financial.png" alt="IMA Financial" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" />
+      <img src="/logos/boeing.png" alt="Boeing" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" />
+      <img src="/logos/f5.png" alt="F5" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" aria-hidden="true" />
+      <img src="/logos/doctornow.png" alt="Doctor Now" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" aria-hidden="true" />
+      <img src="/logos/ima-financial.png" alt="IMA Financial" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" aria-hidden="true" />
+      <img src="/logos/boeing.png" alt="Boeing" class="h-7 opacity-20 hover:opacity-40 transition-opacity grayscale" aria-hidden="true" />
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="max-w-5xl mx-auto px-6 py-28">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+      <div>
+        <p class="font-mono text-xs text-white/20 tracking-widest uppercase mb-6">About</p>
+        <h2 class="text-2xl font-light text-white/80 leading-relaxed mb-6">
+          Systems thinker.<br />Security practitioner.
+        </h2>
+      </div>
+      <div class="space-y-5 text-white/40 font-light leading-relaxed">
+        <p>
+          I don't optimise for writing fast code or chasing language features.
+          I reason about systems — how they connect, where they break, and what
+          happens when they're under pressure.
+        </p>
+        <p>
+          My work spans cloud providers, Kubernetes control and data planes,
+          reverse proxies, API automation, and the security boundaries between
+          all of them. Across financial services, healthcare, aerospace, and
+          enterprise networking.
+        </p>
+        <p>
+          If it's complex, distributed, and needs to stay up — that's where I do
+          my best work.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="max-w-5xl mx-auto px-6 pb-28">
+    <div class="border-t border-white/5 pt-16">
+      <p class="font-mono text-xs text-white/20 tracking-widest uppercase mb-10">Capabilities</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5">
+        {[
+          { area: 'Cloud & Infrastructure', items: ['AWS', 'GCP', 'Azure', 'Terraform', 'Pulumi'] },
+          { area: 'Kubernetes', items: ['Control plane', 'Data plane', 'Admission controllers', 'Service mesh', 'eBPF'] },
+          { area: 'Security', items: ['Zero trust', 'mTLS', 'IAM', 'RBAC', 'Supply chain'] },
+          { area: 'Systems & Automation', items: ['Reverse proxies', 'API gateways', 'CI/CD pipelines', 'Observability', 'Incident response'] },
+        ].map((group) => (
+          <div class="bg-[#0a0a0a] p-6">
+            <p class="text-xs text-white/30 font-mono mb-4 tracking-wide">{group.area}</p>
+            <ul class="space-y-2">
+              {group.items.map((item) => (
+                <li class="text-sm text-white/40 font-light">{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Studies -->
+  <section id="work" class="max-w-5xl mx-auto px-6 pb-28">
+    <div class="border-t border-white/5 pt-16">
+      <p class="font-mono text-xs text-white/20 tracking-widest uppercase mb-10">Case Studies</p>
+      <div class="space-y-px bg-white/5">
+        {caseStudies.length > 0 ? caseStudies.map((study) => (
+          <a
+            href={`/case-studies/${study.slug}`}
+            class="group flex items-start justify-between gap-8 bg-[#0a0a0a] p-8 hover:bg-white/[0.02] transition-colors"
+          >
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="font-mono text-xs text-blue-400/60 tracking-widest uppercase">{study.data.client}</span>
+                <span class="text-white/10">·</span>
+                <span class="font-mono text-xs text-white/20">{study.data.date}</span>
+              </div>
+              <h3 class="text-lg font-light text-white/70 group-hover:text-white/90 transition-colors mb-3">
+                {study.data.title}
+              </h3>
+              <p class="text-sm text-white/30 font-light leading-relaxed max-w-xl">
+                {study.data.summary}
+              </p>
+              <div class="flex flex-wrap gap-2 mt-4">
+                {study.data.tags.map((tag) => (
+                  <span class="font-mono text-xs text-white/20 border border-white/10 rounded px-2 py-0.5">{tag}</span>
+                ))}
+              </div>
+            </div>
+            <span class="text-white/20 group-hover:text-white/50 transition-colors mt-1 text-lg">→</span>
+          </a>
+        )) : (
+          <div class="bg-[#0a0a0a] p-8 text-white/20 text-sm font-light font-mono">
+            Case studies coming soon.
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="max-w-5xl mx-auto px-6 pb-28">
+    <div class="border-t border-white/5 pt-16">
+      <div class="max-w-lg">
+        <p class="font-mono text-xs text-white/20 tracking-widest uppercase mb-6">Contact</p>
+        <h2 class="text-2xl font-light text-white/80 mb-4">Let's talk.</h2>
+        <p class="text-white/40 font-light leading-relaxed mb-10">
+          If you're dealing with a hard systems or security problem and need
+          someone who can reason about it end-to-end, reach out.
+        </p>
+        <div class="space-y-4">
+          <a href="mailto:haider@haidermirza.dev" class="flex items-center gap-3 text-white/40 hover:text-white/70 transition-colors group">
+            <span class="font-mono text-xs text-white/20 w-20">Email</span>
+            <span class="text-sm group-hover:underline underline-offset-4">haider@haidermirza.dev</span>
+          </a>
+          <a href="https://linkedin.com/in/haidermirza" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-white/40 hover:text-white/70 transition-colors group">
+            <span class="font-mono text-xs text-white/20 w-20">LinkedIn</span>
+            <span class="text-sm group-hover:underline underline-offset-4">linkedin.com/in/haidermirza</span>
+          </a>
+          <a href="https://github.com/haidermirza" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-white/40 hover:text-white/70 transition-colors group">
+            <span class="font-mono text-xs text-white/20 w-20">GitHub</span>
+            <span class="text-sm group-hover:underline underline-offset-4">github.com/haidermirza</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

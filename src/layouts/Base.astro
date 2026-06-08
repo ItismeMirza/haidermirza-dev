@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Haider Mirza — Cloud Native Security Engineer',
+  description = 'I work at the intersection of cloud infrastructure, systems, and source code — keeping them confidential, integral, and available.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="antialiased">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
+      <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+        <a href="/" class="font-mono text-sm text-white/40 hover:text-white/70 transition-colors tracking-widest uppercase">
+          HM
+        </a>
+        <div class="flex items-center gap-8">
+          <a href="/#work" class="text-sm text-white/40 hover:text-white/70 transition-colors">Work</a>
+          <a href="/#about" class="text-sm text-white/40 hover:text-white/70 transition-colors">About</a>
+          <a href="/#contact" class="text-sm text-white/40 hover:text-white/70 transition-colors">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="border-t border-white/5 mt-32">
+      <div class="max-w-5xl mx-auto px-6 py-10 flex items-center justify-between">
+        <span class="font-mono text-xs text-white/20 tracking-widest">HAIDER MIRZA</span>
+        <span class="text-xs text-white/20">London</span>
+      </div>
+    </footer>
+  </body>
+</html>

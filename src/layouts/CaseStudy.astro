@@ -1,0 +1,54 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    client: string;
+    date: string;
+    tags: string[];
+    summary: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+---
+
+<Base title={`${frontmatter.title} — Haider Mirza`} description={frontmatter.summary}>
+  <article class="max-w-3xl mx-auto px-6 pt-36 pb-24">
+    <a href="/#work" class="inline-flex items-center gap-2 text-sm text-white/30 hover:text-white/60 transition-colors mb-16 font-mono">
+      ← back
+    </a>
+
+    <div class="mb-4 flex items-center gap-3">
+      <span class="font-mono text-xs text-blue-400/70 tracking-widest uppercase">{frontmatter.client}</span>
+      <span class="text-white/10">·</span>
+      <span class="font-mono text-xs text-white/20">{frontmatter.date}</span>
+    </div>
+
+    <h1 class="text-3xl font-light text-white/90 leading-tight mb-6">{frontmatter.title}</h1>
+
+    <p class="text-white/50 text-lg font-light leading-relaxed mb-10 border-l border-blue-500/30 pl-5">
+      {frontmatter.summary}
+    </p>
+
+    <div class="flex flex-wrap gap-2 mb-16">
+      {frontmatter.tags.map((tag: string) => (
+        <span class="font-mono text-xs text-white/30 border border-white/10 rounded px-3 py-1">{tag}</span>
+      ))}
+    </div>
+
+    <div class="prose prose-invert prose-sm max-w-none
+      prose-headings:font-light prose-headings:text-white/80
+      prose-h2:text-xl prose-h2:mt-12 prose-h2:mb-4
+      prose-h3:text-base prose-h3:text-white/60 prose-h3:mt-8
+      prose-p:text-white/50 prose-p:leading-relaxed prose-p:font-light
+      prose-li:text-white/50 prose-li:font-light
+      prose-strong:text-white/70 prose-strong:font-medium
+      prose-code:text-blue-400/80 prose-code:font-mono prose-code:text-sm
+      prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/10
+      prose-hr:border-white/10">
+      <slot />
+    </div>
+  </article>
+</Base>
