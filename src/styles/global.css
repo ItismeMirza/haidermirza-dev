@@ -12,7 +12,7 @@ html {
 
 body {
   font-family: var(--font-family-sans);
-  background-color: #0a0a0a;
+  background-color: #1a1a1a;
   color: #e5e5e5;
   font-weight: 300;
 }
@@ -23,12 +23,13 @@ body {
 }
 
 .logo-track {
-  animation: scroll-logos 30s linear infinite;
+  animation: scroll-logos 25s linear infinite;
+  padding: 0 3rem;
 }
 
 @keyframes scroll-logos {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-25%); }
 }
 
 .logo-banner:hover .logo-track {
