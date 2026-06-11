@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://haidermirza.dev',
+  trailingSlash: 'always',
   integrations: [mdx()],
   vite: {
     plugins: [tailwindcss()],
