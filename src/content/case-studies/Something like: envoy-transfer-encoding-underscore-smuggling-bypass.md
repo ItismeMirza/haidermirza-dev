@@ -9,7 +9,7 @@ summary: Identified an uninspected HTTP request smuggling vector on an Envoy bas
 
 ## The Problem
 
-While investigating a customer potentially impacted by an HTTP smuggling attack with a cloud WAF in front, I began systematically testing Transfer-Encoding obfuscation variants against an Envoy based reverse proxy platform. The platform performs dedicated inspection of CL+TE combinations — requests containing both a Transfer-Encoding and Content-Length header are blocked at the gateway level with a 400 response regardless of WAF configuration state.
+While investigating a customer potentially impacted by an HTTP smuggling attack with a cloud WAF in front, I began systematically testing Transfer-Encoding obfuscation variants against an Envoy based reverse proxy platform. Envoy performs dedicated inspection of CL+TE combinations — requests containing both a Transfer-Encoding and Content-Length header are blocked at the gateway level with a 400 response regardless of WAF configuration state.
 
 The question driving the investigation was whether this protection was comprehensive or whether obfuscation variants existed that could bypass it.
 
@@ -17,11 +17,11 @@ The question driving the investigation was whether this protection was comprehen
 
 ### Systematic Obfuscation Testing
 
-I tested 42 Transfer-Encoding obfuscation variants against the platform including invalid values, casing mutations, whitespace variations, duplicate headers, and folded headers. All 42 were blocked with a 400 response at the gateway level with no WAF configuration required. This confirmed the platform has dedicated security logic specifically handling Transfer-Encoding in the context of smuggling prevention, operating beyond strict RFC compliance.
+I tested 42 Transfer-Encoding obfuscation variants against Envoy including invalid values, casing mutations, whitespace variations, duplicate headers, and folded headers. All 42 were blocked with a 400 response at the gateway level with no WAF configuration required. This confirmed Envoy has dedicated security logic specifically handling Transfer-Encoding in the context of smuggling prevention, operating beyond strict RFC compliance.
 
 ### Identifying the Bypass
 
-During testing I sent a request using `Transfer_Encoding: chunked` — the header name with an underscore rather than a hyphen — combined with `Content-Length`. Unlike every other variant tested, this request was not blocked. The platform forwarded it to the backend untouched.
+During testing I sent a request using `Transfer_Encoding: chunked` — the header name with an underscore rather than a hyphen — combined with `Content-Length`. Unlike every other variant tested, this request was not blocked. Envoy forwarded it to the backend untouched.
 
 The underscore variant is not a valid HTTP/1.1 Transfer-Encoding header under normal parsing rules. However Envoy's security inspection performs string matching on the hyphen variant specifically. The underscore variant falls outside this inspection scope and is treated as an unknown generic header rather than a Transfer-Encoding directive. The backend, depending on its parser implementation, may interpret it as a valid Transfer-Encoding instruction — creating the classic CL+TE ambiguity that enables request smuggling.
 
@@ -44,24 +44,24 @@ curl https://[target] \
   -v 2>&1
 ```
 
-The request was forwarded through the platform with `Transfer_Encoding: chunked` intact in the headers reaching the backend. The backend processed both the legitimate request and the smuggled content confirming the bypass is functional and not theoretical.
+The request was forwarded through Envoy with `Transfer_Encoding: chunked` intact in the headers reaching the backend. The backend processed both the legitimate request and the smuggled content confirming the bypass is functional and not theoretical.
 
 ### Why RFC Compliance Is Not the Boundary
 
-RFC 7230 does not prohibit underscore containing header names — but neither does it permit the 42 other obfuscation variants already blocked by the platform. Values like `xchunked`, casing mutations, and whitespace variants are equally outside RFC compliance and equally non-standard, yet all are blocked without exception. This confirms that RFC compliance is not the inspection boundary being used.
+RFC 7230 does not prohibit underscore containing header names — but neither does it permit the 42 other obfuscation variants already blocked by Envoy. Values like `xchunked`, casing mutations, and whitespace variants are equally outside RFC compliance and equally non-standard, yet all are blocked without exception. This confirms that RFC compliance is not the inspection boundary being used.
 
 Transfer-Encoding is also not analogous to an arbitrary custom header. It is a protocol level header with a specific role in HTTP/1.1 message framing and a well documented history as the primary vehicle for request smuggling attacks. The gap is specifically that Envoy's header normalization does not extend to the security inspection pass for this header — underscore and hyphen variants are not treated as equivalent representations in the context of smuggling detection.
 
 ## The Customer Visibility Problem
 
-The more significant issue beyond the technical gap is that customers have no way of knowing this limitation exists. A platform blocking 42+ Transfer-Encoding obfuscation variants by default creates a reasonable expectation that CL+TE smuggling prevention is comprehensive. Without documentation of this boundary customers cannot make informed decisions about whether additional mitigation at the application layer is required.
+The more significant issue beyond the technical gap is that customers have no way of knowing this limitation exists. Envoy is blocking 42+ Transfer-Encoding obfuscation variants by default creates a reasonable expectation that CL+TE smuggling prevention is comprehensive. Without documentation of this boundary customers cannot make informed decisions about whether additional mitigation at the application layer is required.
 
 This is compounded by the fact that the bypass is simple to execute, requires no special tooling, and produces no error or log signal at the gateway level that would alert defenders to its use.
 
 ## Outcome
 
-- Identified a functional bypass of dedicated CL+TE smuggling prevention on an Envoy based WAF platform
+- Identified a functional bypass of dedicated CL+TE smuggling prevention on an Envoy instance
 - Demonstrated the bypass with a working end to end proof of concept
 - Established the root cause as a header normalization gap in Envoy's security inspection logic where underscore and hyphen variants of Transfer-Encoding are not treated as equivalent
-- Documented the customer visibility gap — the limitation is undocumented and customers relying on the platform's default smuggling prevention may not be aware manual mitigation is required for this variant
+- Documented the customer visibility gap — the limitation is undocumented and customers relying on the envoys's default smuggling prevention may not be aware manual mitigation is required for this variant
 - Investigation ongoing in relation to a customer potentially impacted by this vector
