@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
 
+@plugin "@tailwindcss/typography";
+
 @theme {
   --font-family-sans: 'DM Sans', sans-serif;
   --font-family-mono: 'DM Mono', monospace;
