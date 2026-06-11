@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import CaseStudy from '../../layouts/CaseStudy.astro';
 
 export async function getStaticPaths() {
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 }
 
 const { study } = Astro.props;
-const { Content } = await study.render();
+const { Content } = await render(study);
 ---
 
 <CaseStudy frontmatter={study.data}>
